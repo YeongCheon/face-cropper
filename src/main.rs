@@ -56,22 +56,24 @@ fn get_file_list(input_path: &String) -> Vec<String> {
 }
 
 fn crop_faces(face_detector: &Box<dyn FaceDetector>, path_list: Vec<String>) {
-    path_list.iter().for_each(|path| {
-        let path = Path::new(path);
+    path_list.iter().for_each(|image_path| {
+        let bar = ProgressBar::new_spinner().with_message(format!("{}", image_path));
+        bar.enable_steady_tick(Duration::from_micros(100));
+
+        let path = Path::new(image_path);
         let file_name = path.file_name().unwrap();
         let extension = match path.extension() {
             Some(extension) => extension.to_str().unwrap(),
             None => "jpg",
         };
 
-        let image = image::open(path)
-            .expect("Can't open test image.")
-            .into_rgb8()
-            .into_array3();
-
-        let bar = ProgressBar::new_spinner().with_message(path.display().to_string());
-
-        bar.enable_steady_tick(Duration::from_micros(100));
+        let image = match image::open(path) {
+            Ok(image) => image.into_rgb8().into_array3(),
+            Err(err) => {
+                eprintln!("{}", err);
+                return;
+            }
+        };
 
         let faces = face_detector.detect(image.view().into_dyn()).unwrap();
 
