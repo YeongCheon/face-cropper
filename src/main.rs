@@ -59,7 +59,10 @@ fn crop_faces(face_detector: &Box<dyn FaceDetector>, path_list: Vec<String>) {
     path_list.iter().for_each(|path| {
         let path = Path::new(path);
         let file_name = path.file_name().unwrap();
-        let extension = path.extension().unwrap();
+        let extension = match path.extension() {
+            Some(extension) => extension.to_str().unwrap(),
+            None => "jpg",
+        };
 
         let image = image::open(path)
             .expect("Can't open test image.")
@@ -91,7 +94,7 @@ fn crop_faces(face_detector: &Box<dyn FaceDetector>, path_list: Vec<String>) {
             let output_name = format!(
                 "{}.{}",
                 format!("{}_output{:0>3}", file_name.to_str().unwrap(), idx + 1),
-                extension.to_str().unwrap()
+                extension
             );
 
             output_image
