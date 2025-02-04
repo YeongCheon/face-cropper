@@ -2,6 +2,13 @@
 name = "face-cropper"
 version = "0.1.0"
 edition = "2021"
+authors = ["YeongCheon Kim <kyc1682@gmail.com>"]
+repository = "https://github.com/YeongCheon/face-cropper"
+description = "Face Cropper is a simple Rust command-line application that detects and crops faces from images."
+license = "MIT"
+license-file = "LICENSE"
+keywords = ["face", "machine-learning"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 clap = { version = "4.5.27", features = ["derive"] }
