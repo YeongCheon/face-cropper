@@ -58,7 +58,7 @@ fn get_file_list(input_path: &String) -> Vec<String> {
 fn crop_faces(face_detector: &Box<dyn FaceDetector>, path_list: Vec<String>) {
     path_list.iter().for_each(|image_path| {
         let bar = ProgressBar::new_spinner().with_message(format!("{}", image_path));
-        bar.enable_steady_tick(Duration::from_micros(100));
+        bar.enable_steady_tick(Duration::from_micros(500));
 
         let path = Path::new(image_path);
         let file_name = path.file_name().unwrap();
@@ -120,10 +120,16 @@ fn main() {
         .get_one::<String>("path")
         .expect("경로가 제공되지 않습니다.");
 
+    let provider: Provider = if cfg!(target_os = "macos") {
+        Provider::OrtCoreMl
+    } else {
+        Provider::OrtCpu
+    };
+
     let face_detector = FaceDetectorBuilder::new(FaceDetection::MtCnn(MtCnnParams::default()))
         .download()
         .infer_params(InferParams {
-            provider: Provider::OrtCoreMl,
+            provider,
             intra_threads: Some(5),
             ..Default::default()
         })

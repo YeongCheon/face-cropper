@@ -7,4 +7,4 @@ edition = "2021"
 clap = { version = "4.5.27", features = ["derive"] }
 image = "0.24.6"
 indicatif = "0.17.11"
-rust-faces = { version = "1.0.0", features = ["viz"] }
+rust-faces = { version = "1.0.0" }
